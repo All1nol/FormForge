@@ -13,8 +13,11 @@
 
 # misc
 .DS_Store
+<<<<<<< HEAD
 .env
 .env.*
+=======
+>>>>>>> f32c9a7 (initial MVP)
 .env.local
 .env.development.local
 .env.test.local
