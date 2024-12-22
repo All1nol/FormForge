@@ -1,0 +1,11 @@
+{
+    "buildCommand": "npm run build",
+    "outputDirectory": "build",
+    "framework": "create-react-app",
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "https://form-app-backend-5q1uyq6k6-all1nols-projects.vercel.app/"
+      }
+    ]
+  }
