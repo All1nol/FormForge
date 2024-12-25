@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import TemplateDetails from './pages/TemplateDetails';
 import UserPage from './pages/UserPage';
@@ -31,6 +31,7 @@ const App = () => {
             />
             <Route path="/login" element={<LoginRegister />} />
             <Route path="/search" element={<SearchResults />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>
       </div>
