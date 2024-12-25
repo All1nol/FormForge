@@ -1,6 +1,6 @@
 import TemplateCard from '../components/TemplateCard';
 import { useState, useEffect } from 'react';
-import api from '../services/api';
+import api from '../services/api.js';
 // import TagCloud from '../components/TagCloud.js';
 const MainPage = () => {
   const [templates, setTemplates] = useState([]);

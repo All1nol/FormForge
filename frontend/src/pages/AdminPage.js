@@ -1,11 +1,9 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
 const AdminPage = () => {
   const [users, setUsers] = useState([]);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUsers = async () => {
