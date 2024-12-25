@@ -20,7 +20,8 @@ api.interceptors.request.use(
   }
 );
 
-export default {
+// Define the API object
+const apiObject = {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
@@ -42,3 +43,5 @@ export default {
   unblockUser: (userId) => api.patch(`/users/${userId}/unblock`),
   logout: () => api.post('/users/logout'),
 };
+
+export default apiObject;

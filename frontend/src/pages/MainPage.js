@@ -1,6 +1,6 @@
 import TemplateCard from '../components/TemplateCard';
 import { useState, useEffect } from 'react';
-import api from '../services/api';
+import apiObject from '../services/api.js';
 // import TagCloud from '../components/TagCloud.js';
 const MainPage = () => {
   const [templates, setTemplates] = useState([]);
@@ -11,7 +11,7 @@ const MainPage = () => {
     // Fetch latest templates
     const fetchTemplates = async () => {
       try {
-        const result = await api.getTemplates();
+        const result = await apiObject.getTemplates();
         setTemplates(result.data);
       } catch (error) {
         console.error('Error fetching templates:', error);
@@ -21,7 +21,7 @@ const MainPage = () => {
     // Fetch top 5 most popular templates
     const fetchPopularTemplates = async () => {
       try {
-        const result = await api.getPopularTemplates();
+        const result = await apiObject.getPopularTemplates();
         setPopularTemplates(result.data);
       } catch (error) {
         console.error('Error fetching popular templates:', error);
