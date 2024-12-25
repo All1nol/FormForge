@@ -20,8 +20,7 @@ api.interceptors.request.use(
   }
 );
 
-// Define the API object
-const apiMethods = {
+export default {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
@@ -43,5 +42,3 @@ const apiMethods = {
   unblockUser: (userId) => api.patch(`/users/${userId}/unblock`),
   logout: () => api.post('/users/logout'),
 };
-
-export default apiMethods;
