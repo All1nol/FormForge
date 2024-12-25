@@ -21,7 +21,7 @@ api.interceptors.request.use(
 );
 
 // Define the API object
-const apiObject = {
+const apiMethods = {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
@@ -44,4 +44,4 @@ const apiObject = {
   logout: () => api.post('/users/logout'),
 };
 
-export default apiObject;
+export default apiMethods;
