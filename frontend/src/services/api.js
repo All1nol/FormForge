@@ -1,7 +1,11 @@
 import axios from 'axios';
 
+const baseURL = process.env.NODE_ENV === 'development' 
+  ? 'http://localhost:5000/api'  // local backend with /api prefix
+  : process.env.REACT_APP_API_URL; // deployed backend with /api prefix
+
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  baseURL: baseURL,
 });
 
 api.interceptors.request.use(
@@ -21,7 +25,7 @@ api.interceptors.request.use(
 );
 
 // Assign the object to a variable
-const apiMethods = {
+ export default {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
@@ -42,5 +46,3 @@ const apiMethods = {
   blockUser: (userId) => api.patch(`/users/${userId}/block`),
   unblockUser: (userId) => api.patch(`/users/${userId}/unblock`),
 };
-
-export default apiMethods;
