@@ -20,6 +20,10 @@ const userSchema = mongoose.Schema(
       enum: ['user', 'admin'],
       default: 'user'
     },
+    blockedUsers: [{
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User'
+    }],
     isBlocked: {
       type: Boolean,
       default: false

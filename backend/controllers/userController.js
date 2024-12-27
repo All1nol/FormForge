@@ -51,6 +51,9 @@ export const authUser = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email });
 
   if (user && (await bcrypt.compare(password, user.password))) {
+    if (user.isBlocked) {
+      return res.status(403).json({ message: 'User is blocked' });
+    }
     res.json({
       _id: user.id,
       name: user.name,
@@ -65,7 +68,9 @@ export const authUser = asyncHandler(async (req, res) => {
 
 export const getUserTemplates = async (req, res) => {
   try {
-    const templates = await Template.find({ createdBy: req.user.id });
+    const templates = await Template.find({ user: req.user._id })
+      .populate('user', 'name email')
+      .sort('-createdAt');
     res.json(templates);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -74,8 +79,9 @@ export const getUserTemplates = async (req, res) => {
 
 export const getUserForms = async (req, res) => {
   try {
-    const forms = await Form.find({ submittedBy: req.user.id })
-      .populate('template', 'title');
+    const forms = await Form.find({ user: req.user._id })
+      .populate('template', 'title')
+      .sort('-createdAt');
     res.json(forms);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -96,15 +102,21 @@ export const getUsers = async (req, res) => {
 
 export const blockUser = async (req, res) => {
   try {
-    if (req.user.role !== 'admin') {
-      return res.status(403).json({ message: 'Not authorized' });
+    const userToBlock = await User.findById(req.params.id);
+    if (!userToBlock) {
+      return res.status(404).json({ message: 'User not found' });
     }
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { isBlocked: true },
-      { new: true }
-    );
-    res.json(user);
+
+    userToBlock.isBlocked = true;
+    await userToBlock.save();
+
+    const currentUser = await User.findById(req.user._id);
+    if (!currentUser.blockedUsers.includes(userToBlock._id)) {
+      currentUser.blockedUsers.push(userToBlock._id);
+      await currentUser.save();
+    }
+
+    res.status(200).json({ message: 'User blocked successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -115,12 +127,15 @@ export const unblockUser = async (req, res) => {
     if (req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Not authorized' });
     }
-    const user = await User.findByIdAndUpdate(
-      req.params.id,
-      { isBlocked: false },
-      { new: true }
-    );
-    res.json(user);
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    user.isBlocked = false;
+    await user.save();
+
+    res.json({ message: 'User unblocked successfully' });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -133,4 +148,3 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-

@@ -21,13 +21,18 @@ const AdminPage = () => {
 
   const handleBlockUnblock = async (userId, action) => {
     try {
-      if (action === 'block') await api.blockUser(userId);
-      if (action === 'unblock') await api.unblockUser(userId);
-      const updatedUsers = await api.getUsers();
-      setUsers(updatedUsers.data);
+      if (action === 'block') {
+        await api.blockUser(userId);
+      } else if (action === 'unblock') {
+        await api.unblockUser(userId);
+      }
+      
+      const { data } = await api.getUsers();
+      setUsers(data);
       setError(null);
     } catch (error) {
-      setError(`Failed to ${action} user. Please try again.`);
+      const errorMessage = error.response?.data?.message || `Failed to ${action} user`;
+      setError(errorMessage);
       console.error(`Failed to ${action} user:`, error);
     }
   };

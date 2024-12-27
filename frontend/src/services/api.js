@@ -1,8 +1,8 @@
 import axios from 'axios';
 
 const baseURL = process.env.NODE_ENV === 'development' 
-  ? 'http://localhost:5000/api'  // local backend with /api prefix
-  : process.env.REACT_APP_API_URL; // deployed backend with /api prefix
+  ? 'http://localhost:5000/api' 
+  : process.env.REACT_APP_API_URL; 
 
 const api = axios.create({
   baseURL: baseURL,
@@ -11,6 +11,7 @@ const api = axios.create({
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
+    console.log('Token:', token); // Log the token to check if it's being retrieved correctly
     
     // Always attach token if it exists, except for login and register
     if (token && !config.url.includes('/login') && !config.url.includes('/register')) {
@@ -38,6 +39,7 @@ api.interceptors.request.use(
   updateTemplate: (id, data) => api.put(`/templates/${id}`, data),
   deleteTemplate: (id) => api.delete(`/templates/${id}`),
   addCommentToTemplate: (id, comment) => api.post(`/templates/${id}/comments`, { text: comment }),
+  submitTemplateForm: (templateId, data) => api.post(`/templates/${templateId}/submit`, data),
   
   // User and Admin endpoints
   getUserTemplates: () => api.get('/users/templates'),

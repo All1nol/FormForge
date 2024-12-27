@@ -1,16 +1,28 @@
 import mongoose from 'mongoose';
 
 const formSchema = new mongoose.Schema({
-  template: { type: mongoose.Schema.Types.ObjectId, ref: 'Template', required: true },
-  answers: [
-    {
-      questionId: { type: mongoose.Schema.Types.ObjectId, required: true },
-      answer: { type: mongoose.Schema.Types.Mixed, required: true }, // Mixed type for text/number/boolean
-    },
-  ],
-  submittedBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
-  submissionDate: { type: Date, default: Date.now },
+  template: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'Template'
+  },
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  },
+  answers: {
+    type: Map,
+    of: mongoose.Schema.Types.Mixed
+  },
+  submittedAt: {
+    type: Date,
+    default: Date.now
+  }
+}, {
+  timestamps: true
 });
 
 const Form = mongoose.model('Form', formSchema);
+
 export default Form;

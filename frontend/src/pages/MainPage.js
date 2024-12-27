@@ -1,41 +1,45 @@
+import React, { useState, useEffect } from 'react';
+import api from '../services/api';
 import TemplateCard from '../components/TemplateCard';
-import { useState, useEffect } from 'react';
-import api from '../services/api.js';
-// import TagCloud from '../components/TagCloud.js';
+import { useNavigate } from 'react-router-dom';
+
 const MainPage = () => {
   const [templates, setTemplates] = useState([]);
   const [popularTemplates, setPopularTemplates] = useState([]);
   const [isAuthenticated] = useState(!!localStorage.getItem('token'));
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch latest templates
-    const fetchTemplates = async () => {
+    const fetchData = async () => {
       try {
-        const result = await api.getTemplates();
-        setTemplates(result.data);
+        setLoading(true);
+        const [templatesRes, popularRes] = await Promise.all([
+          api.getTemplates(),
+          api.getPopularTemplates()
+        ]);
+        
+        setTemplates(templatesRes.data);
+        setPopularTemplates(popularRes.data);
       } catch (error) {
-        console.error('Error fetching templates:', error);
+        setError('Failed to fetch templates');
+        console.error('Error:', error);
+      } finally {
+        setLoading(false);
       }
     };
 
-    // Fetch top 5 most popular templates
-    const fetchPopularTemplates = async () => {
-      try {
-        const result = await api.getPopularTemplates();
-        setPopularTemplates(result.data);
-      } catch (error) {
-        console.error('Error fetching popular templates:', error);
-      }
-    };
-
-    fetchTemplates();
-    fetchPopularTemplates();
+    fetchData();
   }, []);
 
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div className="error-message">{error}</div>;
+
   return (
-    <div>
+    <div className="main-page">
       <h1>Gallery of Latest Templates</h1>
-      <div className="gallery">
+      <div className="template-gallery">
         {templates.map((template) => (
           <TemplateCard 
             key={template._id} 
@@ -44,26 +48,40 @@ const MainPage = () => {
           />
         ))}
       </div>
-      <h2>Top 5 Popular Templates</h2>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Author</th>
-            <th>Forms Filled</th>
-          </tr>
-        </thead>
-        <tbody>
-          {popularTemplates.map((template) => (
-            <tr key={template._id}>
-              <td>{template.title}</td>
-              <td>{template.createdBy?.name || 'Unknown'}</td>
-              <td>{template.filledFormsCount || 0}</td>
+
+      <section className="popular-templates">
+        <h2>Most Popular Templates</h2>
+        <table className="templates-table">
+          <thead>
+            <tr>
+              <th>Template</th>
+              <th>Created By</th>
+              <th>Submissions</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      {/* <TagCloud /> */}
+          </thead>
+          <tbody>
+            {popularTemplates.map((template) => (
+              <tr key={template._id}>
+                <td>{template.title}</td>
+                <td>{template.user?.name || 'Anonymous'}</td>
+                <td>{template.submissionCount || 0}</td>
+                <td>
+                  <button 
+                    onClick={() => navigate(
+                      isAuthenticated 
+                        ? `/template/${template._id}/submit`
+                        : '/login'
+                    )}
+                  >
+                    {isAuthenticated ? 'Fill Out' : 'Login to Fill'}
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </section>
     </div>
   );
 };

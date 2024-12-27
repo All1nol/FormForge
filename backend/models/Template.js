@@ -1,25 +1,49 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
 
-const templateSchema = new Schema({
-  title: { type: String, required: true },
-  description: { type: String },
-  questions: [
-    {
-      text: { type: String, required: true },
-      type: { type: String, enum: ['text', 'number', 'date', 'boolean'], required: true },
-      isRequired: { type: Boolean, default: false },
-    },
-  ],
-  createdBy: { type: Schema.Types.ObjectId, ref: 'User', required: true },
-  filledFormsCount: { type: Number, default: 0 },
-  tags: [{ type: String }],
-  comments: [
-    {
-      user: { type: Schema.Types.ObjectId, ref: 'User' },
-      text: { type: String, required: true },
-      date: { type: Date, default: Date.now },
-    },
-  ],
-}, { timestamps: true });
+const questionSchema = new mongoose.Schema({
+  text: {
+    type: String,
+    required: true
+  },
+  type: {
+    type: String,
+    required: true,
+    enum: ['text', 'number', 'boolean', 'date']
+  },
+  isRequired: {
+    type: Boolean,
+    default: false
+  }
+});
 
-export default model('Template', templateSchema);
+const templateSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    required: true,
+    ref: 'User'
+  },
+  title: {
+    type: String,
+    required: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
+  questions: [questionSchema],
+  accessType: {
+    type: String,
+    enum: ['all', 'specific'],
+    default: 'all'
+  },
+  allowedUsers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  }]
+}, {
+  timestamps: true
+});
+
+const Template = mongoose.model('Template', templateSchema);
+
+export default Template;

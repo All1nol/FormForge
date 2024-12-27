@@ -1,26 +1,30 @@
 import express from 'express';
-import { 
-  getTemplates, 
-  getPopularTemplates,
-  getTemplateById,
-  createTemplate, 
-  updateTemplate, 
-  deleteTemplate,
-  addComment
-} from '../controllers/templateController.js';
 import { protect } from '../middleware/authMiddleware.js';
+import {
+  createTemplate,
+  getTemplates,
+  getTemplateById,
+  updateTemplate,
+  deleteTemplate,
+  getTemplateSubmissions,
+  submitTemplateForm,
+  getPopularTemplates
+} from '../controllers/templateController.js';
 
 const router = express.Router();
 
-// Public routes
-router.get('/', getTemplates);
-router.get('/popular', getPopularTemplates);
-router.get('/:id', getTemplateById);
+router.route('/')
+  .get(getTemplates)
+  .post(protect, createTemplate);
 
-// Protected routes
-router.post('/', protect, createTemplate);
-router.put('/:id', protect, updateTemplate);
-router.delete('/:id', protect, deleteTemplate);
-router.post('/:id/comments', protect, addComment);
+router.get('/popular', getPopularTemplates);
+
+router.route('/:id')
+  .get(getTemplateById)
+  .put(protect, updateTemplate)
+  .delete(protect, deleteTemplate);
+
+router.get('/:id/submissions', protect, getTemplateSubmissions);
+router.post('/:id/submit', protect, submitTemplateForm);
 
 export default router;
