@@ -36,11 +36,16 @@ const TemplateDetails = () => {
 
       // Fetch submitted forms
       const formsResponse = await api.getTemplateSubmissions(id);
-      setForms(formsResponse.data);
-      
-      // Calculate aggregated results
-      calculateAggregatedResults(formsResponse.data);
+      console.log('Forms Response:', formsResponse.data); // Debug log
+      if (Array.isArray(formsResponse.data)) {
+        setForms(formsResponse.data);
+        calculateAggregatedResults(formsResponse.data);
+      } else {
+        console.error('Forms response is not an array:', formsResponse.data);
+        setForms([]);
+      }
     } catch (error) {
+      console.error('Error fetching template data:', error);
       setError('Failed to fetch template data');
     }
   };
@@ -49,29 +54,60 @@ const TemplateDetails = () => {
     const results = {};
     
     template?.questions.forEach(question => {
-      const answers = forms.map(form => form.answers[question._id]);
-      
+      // Get all answers for this question
+      const answers = forms.map(form => {
+        // Check if answers is a Map or plain object
+        if (form.answers instanceof Map) {
+          return form.answers.get(question._id);
+        }
+        return form.answers[question._id];
+      }).filter(answer => answer !== null && answer !== undefined);
+
+      if (answers.length === 0) return;
+
       switch (question.type) {
         case 'number':
-          const numbers = answers.map(Number).filter(n => !isNaN(n));
-          results[question._id] = {
-            average: numbers.reduce((a, b) => a + b, 0) / numbers.length || 0,
-            min: Math.min(...numbers),
-            max: Math.max(...numbers)
-          };
+          const numbers = answers
+            .map(Number)
+            .filter(n => !isNaN(n));
+
+          if (numbers.length > 0) {
+            results[question._id] = {
+              average: (numbers.reduce((a, b) => a + b, 0) / numbers.length).toFixed(2),
+              min: Math.min(...numbers),
+              max: Math.max(...numbers),
+              count: numbers.length,
+              distribution: numbers.reduce((acc, curr) => {
+                acc[curr] = (acc[curr] || 0) + 1;
+                return acc;
+              }, {})
+            };
+          }
           break;
-        
+
         case 'text':
         case 'boolean':
+        case 'date':
           const frequency = answers.reduce((acc, curr) => {
-            acc[curr] = (acc[curr] || 0) + 1;
+            const value = String(curr);
+            acc[value] = (acc[value] || 0) + 1;
             return acc;
           }, {});
-          results[question._id] = {
-            mostCommon: Object.entries(frequency)
-              .sort((a, b) => b[1] - a[1])[0]?.[0],
-            frequency
-          };
+
+          if (Object.keys(frequency).length > 0) {
+            const sortedEntries = Object.entries(frequency)
+              .sort((a, b) => b[1] - a[1]);
+
+            results[question._id] = {
+              mostCommon: sortedEntries[0][0],
+              frequency,
+              count: answers.length,
+              percentages: Object.entries(frequency).reduce((acc, [value, count]) => {
+                acc[value] = ((count / answers.length) * 100).toFixed(1) + '%';
+                return acc;
+              }, {})
+            };
+          }
           break;
       }
     });
@@ -200,58 +236,102 @@ const TemplateDetails = () => {
     </div>
   );
 
-  const renderResults = () => (
-    <div className="results-section">
-      <h3>Submitted Forms ({forms.length})</h3>
-      <table>
-        <thead>
-          <tr>
-            <th>Submitted By</th>
-            <th>Date</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {forms.map(form => (
-            <tr key={form._id}>
-              <td>{form.user.name}</td>
-              <td>{new Date(form.submittedAt).toLocaleDateString()}</td>
-              <td>
-                <button onClick={() => navigate(`/form/${form._id}`)}>
-                  View
-                </button>
-              </td>
+  const renderResults = () => {
+    return (
+      <div className="results-tab">
+        <h3>Submitted Forms ({forms.length})</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Submitted By</th>
+              <th>Date</th>
+              <th>Actions</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+          </thead>
+          <tbody>
+            {forms.map((form) => (
+              <tr key={form._id}>
+                <td>{form.user?.name || 'Anonymous'}</td>
+                <td>{new Date(form.submittedAt).toLocaleDateString()}</td>
+                <td>
+                  <button 
+                    onClick={() => navigate(`/forms/${form._id}/view`)}
+                    className="view-button"
+                  >
+                    View
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    );
+  };
 
   const renderAggregation = () => (
     <div className="aggregation-section">
-      {template?.questions.map((question, index) => (
-        <div key={index} className="question-stats">
-          <h3>{question.text}</h3>
-          {question.type === 'number' ? (
-            <div>
-              <p>Average: {aggregatedResults[question._id]?.average.toFixed(2)}</p>
-              <p>Min: {aggregatedResults[question._id]?.min}</p>
-              <p>Max: {aggregatedResults[question._id]?.max}</p>
-            </div>
-          ) : (
-            <div>
-              <p>Most Common Answer: {aggregatedResults[question._id]?.mostCommon}</p>
-              <h4>Response Distribution:</h4>
-              {Object.entries(aggregatedResults[question._id]?.frequency || {}).map(([answer, count]) => (
-                <p key={answer}>{answer}: {count} responses</p>
-              ))}
-            </div>
-          )}
-        </div>
-      ))}
+      {template?.questions.map((question, index) => {
+        const stats = aggregatedResults[question._id];
+        if (!stats) return null;
+
+        return (
+          <div key={index} className="question-stats">
+            <h3>{question.text}</h3>
+            <p>Total Responses: {stats.count}</p>
+
+            {question.type === 'number' ? (
+              <>
+                <p>Average: {stats.average}</p>
+                <p>Min: {stats.min}</p>
+                <p>Max: {stats.max}</p>
+                <h4>Distribution:</h4>
+                <div className="distribution">
+                  {Object.entries(stats.distribution).map(([value, count]) => (
+                    <div key={value} className="distribution-item">
+                      <span>{value}: </span>
+                      <span>{count} responses</span>
+                      <span>({((count / stats.count) * 100).toFixed(1)}%)</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <>
+                <p>Most Common Answer: {stats.mostCommon}</p>
+                <h4>Response Distribution:</h4>
+                <div className="distribution">
+                  {Object.entries(stats.frequency).map(([answer, count]) => (
+                    <div key={answer} className="distribution-item">
+                      <span>{answer}: </span>
+                      <span>{count} responses</span>
+                      <span>({stats.percentages[answer]})</span>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
+
+  const fetchAggregation = async () => {
+    try {
+      const response = await api.getTemplateAggregation(id);
+      setAggregatedResults(response.data);
+    } catch (error) {
+      console.error('Error fetching aggregation:', error);
+      setError('Failed to fetch aggregation data');
+    }
+  };
+
+  useEffect(() => {
+    if (template && activeTab === 'aggregation') {
+      fetchAggregation();
+    }
+  }, [template, activeTab]);
 
   return (
     <div className="template-details">

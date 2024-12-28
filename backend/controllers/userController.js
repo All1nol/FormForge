@@ -81,6 +81,7 @@ export const getUserForms = async (req, res) => {
   try {
     const forms = await Form.find({ user: req.user._id })
       .populate('template', 'title')
+      .populate('user', 'name email')
       .sort('-createdAt');
     res.json(forms);
   } catch (error) {

@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import templateRoutes from './routes/templatesRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import formRoutes from './routes/formRoutes.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.use(express.json()); // Parse incoming JSON requests
 // Routes
 app.use('/api/templates', templateRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/forms', formRoutes);
 
 // Default Error Handler
 app.use((err, req, res, next) => {

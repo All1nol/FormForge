@@ -139,7 +139,7 @@ const UserPage = () => {
                   <td>{form.template.title}</td>
                   <td>{new Date(form.submissionDate).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={() => navigate(`/form/${form._id}`)}>View</button>
+                    <button onClick={() => navigate(`/forms/${form._id}/view`)}>View</button>
                   </td>
                 </tr>
               ))}

@@ -26,7 +26,7 @@ api.interceptors.request.use(
 );
 
 // Assign the object to a variable
- export default {
+export default {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
@@ -38,9 +38,18 @@ api.interceptors.request.use(
   createTemplate: (data) => api.post('/templates', data),
   updateTemplate: (id, data) => api.put(`/templates/${id}`, data),
   deleteTemplate: (id) => api.delete(`/templates/${id}`),
-  addCommentToTemplate: (id, comment) => api.post(`/templates/${id}/comments`, { text: comment }),
-  submitTemplateForm: (templateId, data) => api.post(`/templates/${templateId}/submit`, data),
   
+  // Form submissions endpoints
+  submitTemplateForm: (templateId, data) => api.post(`/templates/${templateId}/submit`, data),
+  getTemplateSubmissions: (templateId) => api.get(`/templates/${templateId}/submissions`),
+  getTemplateAggregation: (templateId) => api.get(`/templates/${templateId}/aggregation`),
+  
+  // Comments endpoints
+  addCommentToTemplate: (id, comment) => api.post(`/templates/${id}/comments`, { text: comment }),
+  
+  //view form
+  getFormById: (id) => api.get(`/forms/${id}`),
+
   // User and Admin endpoints
   getUserTemplates: () => api.get('/users/templates'),
   getUserForms: () => api.get('/users/forms'),

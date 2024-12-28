@@ -13,7 +13,9 @@ const formSchema = new mongoose.Schema({
   },
   answers: {
     type: Map,
-    of: mongoose.Schema.Types.Mixed
+    of: mongoose.Schema.Types.Mixed,
+    required: true,
+    default: new Map()
   },
   submittedAt: {
     type: Date,

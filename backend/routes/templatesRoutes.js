@@ -8,6 +8,7 @@ import {
   deleteTemplate,
   getTemplateSubmissions,
   submitTemplateForm,
+  getTemplateAggregation, // Add this
   getPopularTemplates
 } from '../controllers/templateController.js';
 
@@ -24,7 +25,14 @@ router.route('/:id')
   .put(protect, updateTemplate)
   .delete(protect, deleteTemplate);
 
-router.get('/:id/submissions', protect, getTemplateSubmissions);
-router.post('/:id/submit', protect, submitTemplateForm);
+router.route('/:id/submit')
+  .post(protect, submitTemplateForm);
+
+router.route('/:id/submissions')
+  .get(protect, getTemplateSubmissions);
+
+// Add this new route
+router.route('/:id/aggregation')
+  .get(protect, getTemplateAggregation);
 
 export default router;

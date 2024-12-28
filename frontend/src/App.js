@@ -10,6 +10,7 @@ import MainPage from './pages/MainPage';
 import TemplateForm from './components/TemplateForm';
 import ProtectedRoute from './components/ProtectedRoute';
 import FormSubmission from './components/FormSubmission';
+import FormView from './pages/FormView';
 
 const App = () => {
   return (
@@ -49,6 +50,11 @@ const App = () => {
             <Route path="/template/:id/submit" element={
               <ProtectedRoute>
                 <FormSubmission />
+              </ProtectedRoute>
+            } />
+            <Route path="/forms/:id/view" element={
+              <ProtectedRoute>
+                <FormView />
               </ProtectedRoute>
             } />
             <Route path="*" element={<Navigate to="/" replace />} />
