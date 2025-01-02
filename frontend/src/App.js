@@ -17,9 +17,9 @@ const App = () => {
   return (
     <AuthProvider>
       <Router>
-        <div>
+        <div className="min-h-screen bg-cyber-black">
           <Navbar />
-          <main className="container">
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <Routes>
               <Route path="/" element={<MainPage />} />
               <Route path="/template/new" element={
