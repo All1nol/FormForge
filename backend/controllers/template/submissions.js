@@ -32,16 +32,31 @@ export const getTemplateSubmissions = asyncHandler(async (req, res) => {
 });
 
 export const submitTemplateForm = asyncHandler(async (req, res) => {
-  const template = await Template.findById(req.params.id);
+  console.log('Request body:', req.body);
+  console.log('Template ID:', req.params.id);
 
+  const template = await Template.findById(req.params.id);
   if (!template) {
     res.status(404);
     throw new Error('Template not found');
   }
 
   const { answers } = req.body;
+  console.log('Received answers:', answers);
 
-  // Skip required field validation for admin users
+  // Validate answers
+  if (!answers || typeof answers !== 'object') {
+    res.status(400);
+    throw new Error('Invalid answers format');
+  }
+
+  // Ensure at least one answer is provided
+  if (Object.keys(answers).length === 0) {
+    res.status(400);
+    throw new Error('At least one answer is required');
+  }
+
+  // Validate required questions
   if (req.user.role !== 'admin') {
     template.questions.forEach(question => {
       if (question.isRequired && !answers[question._id]) {
@@ -51,11 +66,26 @@ export const submitTemplateForm = asyncHandler(async (req, res) => {
     });
   }
 
-  const form = await Form.create({
+  // Create form with answers
+  const formData = {
     template: template._id,
     user: req.user._id,
-    answers
-  });
+    answers: new Map(Object.entries(answers))
+  };
 
-  res.status(201).json(form);
+  console.log('Creating form with data:', formData);
+  const form = await Form.create(formData);
+
+  // Return populated form
+  const populatedForm = await Form.findById(form._id)
+    .populate('template', 'title description questions')
+    .populate('user', 'name email')
+    .lean();
+
+  // Convert Map to object for response
+  if (populatedForm.answers instanceof Map) {
+    populatedForm.answers = Object.fromEntries(populatedForm.answers);
+  }
+
+  res.status(201).json(populatedForm);
 }); 

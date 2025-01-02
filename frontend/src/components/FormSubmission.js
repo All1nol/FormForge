@@ -45,9 +45,27 @@ const FormSubmission = () => {
     e.preventDefault();
     try {
       setLoading(true);
-      await api.submitTemplateForm(id, { answers });
+      
+      // Filter out empty answers
+      const nonEmptyAnswers = {};
+      template.questions.forEach(question => {
+        const answer = answers[question._id];
+        if (answer && String(answer).trim() !== '') {
+          nonEmptyAnswers[question._id] = answer;
+        }
+      });
+      
+      if (Object.keys(nonEmptyAnswers).length === 0) {
+        setError('Please fill in at least one answer');
+        return;
+      }
+
+      console.log('Submitting answers:', nonEmptyAnswers);
+      const response = await api.submitTemplateForm(id, { answers: nonEmptyAnswers });
+      console.log('Response:', response);
       navigate('/user');
     } catch (error) {
+      console.error('Submission error:', error.response?.data);
       setError(error.response?.data?.message || 'Failed to submit form');
     } finally {
       setLoading(false);

@@ -43,10 +43,16 @@ export default {
   getPopularTemplates: () => api.get('/templates/popular'),
   createTemplate: (data) => api.post('/templates', data),
   updateTemplate: (id, data) => api.put(`/templates/${id}`, data),
-  deleteTemplate,
+  deleteTemplate: (id) => api.delete(`/templates/${id}`),
   
   // Form submissions endpoints
-  submitTemplateForm: (templateId, data) => api.post(`/templates/${templateId}/submit`, data),
+  submitTemplateForm: async (templateId, data) => {
+    console.log('API call:', {
+      url: `/templates/${templateId}/submit`,
+      data
+    });
+    return api.post(`/templates/${templateId}/submit`, data);
+  },
   getTemplateSubmissions: (templateId) => api.get(`/templates/${templateId}/submissions`),
   getTemplateAggregation: (templateId) => api.get(`/templates/${templateId}/aggregation`),
   

@@ -29,6 +29,19 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
   };
 
   const renderQuestion = (question) => {
+    const baseInputClass = `
+      w-full bg-cyber-black border-2 border-cyber-purple rounded-lg p-3 
+      focus:outline-none focus:ring-2 focus:ring-cyber-pink focus:border-transparent 
+      transition-all duration-300 text-white placeholder-gray-500
+      ${question.isRequired ? 'border-cyber-pink' : 'border-cyber-purple'}
+    `;
+
+    const selectClass = `
+      ${baseInputClass}
+      appearance-none bg-right bg-no-repeat
+      pr-10 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHZpZXdCb3g9IjAgMCAyMCAyMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cGF0aCBkPSJNNSA3LjVMMTAgMTIuNUwxNSA3LjUiIHN0cm9rZT0iI2ZmMDBmZiIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz48L3N2Zz4=')]
+    `;
+
     switch (question.type) {
       case 'text':
         return (
@@ -37,7 +50,8 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
             value={answers[question._id] || ''}
             onChange={(e) => handleAnswerChange(question._id, e.target.value)}
             required={question.isRequired}
-            className="form-input"
+            className={baseInputClass}
+            placeholder="Enter your answer..."
           />
         );
       case 'number':
@@ -47,7 +61,8 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
             value={answers[question._id] || ''}
             onChange={(e) => handleAnswerChange(question._id, e.target.value)}
             required={question.isRequired}
-            className="form-input"
+            className={baseInputClass}
+            placeholder="Enter your answer..."
           />
         );
       case 'date':
@@ -57,7 +72,8 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
             value={answers[question._id] || ''}
             onChange={(e) => handleAnswerChange(question._id, e.target.value)}
             required={question.isRequired}
-            className="form-input"
+            className={baseInputClass}
+            placeholder="Enter your answer..."
           />
         );
       case 'boolean':
@@ -66,7 +82,7 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
             value={answers[question._id] || ''}
             onChange={(e) => handleAnswerChange(question._id, e.target.value)}
             required={question.isRequired}
-            className="form-select"
+            className={selectClass}
           >
             <option value="">Select...</option>
             <option value="true">Yes</option>
@@ -79,15 +95,15 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
   };
 
   return (
-    <div className="bg-cyber-gray rounded-xl p-8">
-      <div className="mb-8">
-        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyber-pink to-cyber-purple bg-clip-text text-transparent">
+    <div className="bg-cyber-gray rounded-xl p-8 shadow-lg border-2 border-cyber-purple/30">
+      <div className="mb-8 space-y-4">
+        <h2 className="text-3xl font-bold bg-gradient-to-r from-cyber-pink to-cyber-purple bg-clip-text text-transparent">
           {template.title}
         </h2>
-        <p className="text-gray-300 mb-6">{template.description}</p>
+        <p className="text-gray-300">{template.description}</p>
         
         {isAuthorOrAdmin && (
-          <div className="grid grid-cols-3 gap-4 bg-cyber-blue/30 p-6 rounded-lg">
+          <div className="grid grid-cols-3 gap-4 bg-cyber-blue/20 p-6 rounded-lg border border-cyber-purple/50">
             <div>
               <p className="text-cyber-pink font-medium">Created</p>
               <p className="text-gray-300">{new Date(template.createdAt).toLocaleDateString()}</p>
@@ -106,7 +122,7 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
 
       <form onSubmit={handleSubmit} className="space-y-6">
         {error && (
-          <div className="bg-red-500/20 text-red-400 p-4 rounded-lg">
+          <div className="bg-red-500/20 text-red-400 p-4 rounded-lg border border-red-500/50 animate-pulse">
             {error}
           </div>
         )}
@@ -119,12 +135,7 @@ const GeneralSettings = ({ template, formsCount, isAuthorOrAdmin }) => {
                 <span className="text-cyber-pink ml-1">*</span>
               )}
             </label>
-            <input
-              type="text"
-              className="w-full bg-cyber-black border border-cyber-purple rounded-lg p-3 
-                       focus:outline-none focus:ring-2 focus:ring-cyber-pink 
-                       focus:border-transparent transition-all duration-300"
-            />
+            {renderQuestion(question)}
           </div>
         ))}
 
