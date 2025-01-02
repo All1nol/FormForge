@@ -6,14 +6,14 @@ const TemplateCard = ({ template, isAuthenticated }) => {
 
   const handleClick = () => {
     if (isAuthenticated) {
-      navigate(`/template/${template._id}/submit`);
+      navigate(`/template/${template._id}`);
     } else {
       navigate('/login');
     }
   };
 
   return (
-    <div className="template-card">
+    <div className="template-card" onClick={handleClick}>
       <h3>{template.title}</h3>
       <p>{template.description}</p>
       <div className="template-meta">
@@ -21,9 +21,6 @@ const TemplateCard = ({ template, isAuthenticated }) => {
         <span>Created: {new Date(template.createdAt).toLocaleDateString()}</span>
         <span>By: {template.user?.name || 'Anonymous'}</span>
       </div>
-      <button onClick={handleClick}>
-        {isAuthenticated ? 'Fill Out Form' : 'Login to Fill'}
-      </button>
     </div>
   );
 };

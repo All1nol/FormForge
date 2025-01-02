@@ -4,8 +4,6 @@ import { getFormById } from '../controllers/formController.js';
 
 const router = express.Router();
 
-// Protected routes
-router.route('/:id')
-  .get(protect, getFormById);
+router.get('/:id', protect, getFormById);
 
 export default router;

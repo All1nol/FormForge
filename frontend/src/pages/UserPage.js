@@ -1,14 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../contexts/AuthContext';
+import DeleteTemplateModal from '../components/template/DeleteTemplateModal.js';
 
 const UserPage = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [templates, setTemplates] = useState([]);
   const [forms, setForms] = useState([]);
   const [activeTab, setActiveTab] = useState('templates');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [templateToDelete, setTemplateToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
 
   useEffect(() => {
     fetchUserData();
@@ -59,21 +65,53 @@ const UserPage = () => {
     navigate(`/template/${templateId}`);
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div className="error-message">{error}</div>;
+  const handleDeleteClick = (template) => {
+    setTemplateToDelete(template);
+    setDeleteModalOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    try {
+      setDeleteLoading(true);
+      await api.deleteTemplate(templateToDelete._id);
+      
+      // Update templates list
+      setTemplates(templates.filter(t => t._id !== templateToDelete._id));
+      
+      // Close modal
+      setDeleteModalOpen(false);
+      setTemplateToDelete(null);
+    } catch (error) {
+      console.error('Failed to delete template:', error);
+      // You might want to show an error message here
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
 
   return (
-    <div className="user-dashboard">
-      <h1>User Dashboard</h1>
-      <div className="tabs">
+    <div className="min-h-screen bg-cyber-black text-white p-8">
+      <h1 className="text-4xl font-bold mb-8 bg-gradient-to-r from-cyber-pink to-cyber-purple bg-clip-text text-transparent">
+        {user.role === 'admin' ? 'All Templates' : 'My Templates'}
+      </h1>
+      
+      <div className="flex gap-4 mb-8">
         <button 
-          className={activeTab === 'templates' ? 'active' : ''} 
+          className={`px-6 py-3 rounded-lg transition-all duration-300 ${
+            activeTab === 'templates' 
+              ? 'bg-cyber-pink text-white shadow-neon' 
+              : 'bg-cyber-gray hover:bg-cyber-blue'
+          }`}
           onClick={() => setActiveTab('templates')}
         >
           My Templates ({templates.length})
         </button>
         <button 
-          className={activeTab === 'forms' ? 'active' : ''} 
+          className={`px-6 py-3 rounded-lg transition-all duration-300 ${
+            activeTab === 'forms' 
+              ? 'bg-cyber-pink text-white shadow-neon' 
+              : 'bg-cyber-gray hover:bg-cyber-blue'
+          }`}
           onClick={() => setActiveTab('forms')}
         >
           My Filled Forms ({forms.length})
@@ -81,44 +119,66 @@ const UserPage = () => {
       </div>
 
       {activeTab === 'templates' && (
-        <div className="templates-section">
-          <div className="actions">
-            <button onClick={() => navigate('/template/new')} className="create-button">
+        <div className="bg-cyber-gray rounded-xl p-6 shadow-lg">
+          <div className="mb-6">
+            <button 
+              onClick={() => navigate('/template/new')} 
+              className="bg-cyber-purple hover:bg-opacity-80 px-6 py-3 rounded-lg transition-all duration-300 shadow-neon-hover"
+            >
               Create New Template
             </button>
           </div>
+          
           {templates.length === 0 ? (
-            <p>No templates created yet.</p>
+            <p className="text-gray-400">No templates created yet.</p>
           ) : (
-            <table className="templates-table">
-              <thead>
-                <tr>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th>Created At</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                {templates.map((template) => (
-                  <tr key={template._id}>
-                    <td onClick={() => navigate(`/template/${template._id}`)}>
-                      {template.title}
-                    </td>
-                    <td>{template.description}</td>
-                    <td>{new Date(template.createdAt).toLocaleDateString()}</td>
-                    <td>
-                      <button onClick={() => handleEditTemplate(template._id)}>
-                        Edit
-                      </button>
-                      <button onClick={() => handleDeleteTemplate(template._id)}>
-                        Delete
-                      </button>
-                    </td>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="border-b border-cyber-purple">
+                  <tr>
+                    <th className="text-left py-4 px-6">Title</th>
+                    <th className="text-left py-4 px-6">Description</th>
+                    <th className="text-left py-4 px-6">Created At</th>
+                    <th className="text-left py-4 px-6">Actions</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {templates.map((template) => (
+                    <tr 
+                      key={template._id} 
+                      className="border-b border-cyber-gray hover:bg-cyber-blue/30 transition-colors"
+                    >
+                      <td 
+                        className="py-4 px-6 cursor-pointer hover:text-cyber-pink"
+                        onClick={() => navigate(`/template/${template._id}`)}
+                      >
+                        {template.title}
+                      </td>
+                      <td className="py-4 px-6">{template.description}</td>
+                      <td className="py-4 px-6">
+                        {new Date(template.createdAt).toLocaleDateString()}
+                      </td>
+                      <td className="py-4 px-6">
+                        <div className="flex gap-2">
+                          <button 
+                            onClick={() => handleEditTemplate(template._id)}
+                            className="bg-cyber-purple px-4 py-2 rounded hover:shadow-neon transition-all"
+                          >
+                            Edit
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteClick(template)}
+                            className="bg-cyber-pink px-4 py-2 rounded hover:shadow-neon transition-all"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           )}
         </div>
       )}
@@ -147,6 +207,17 @@ const UserPage = () => {
           </table>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <DeleteTemplateModal
+        isOpen={deleteModalOpen}
+        onClose={() => {
+          setDeleteModalOpen(false);
+          setTemplateToDelete(null);
+        }}
+        onConfirm={handleDeleteConfirm}
+        loading={deleteLoading}
+      />
     </div>
   );
 };

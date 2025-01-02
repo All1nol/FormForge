@@ -8,7 +8,8 @@ import {
   getUsers,
   blockUser,
   unblockUser,
-  logout 
+  logout,
+  getCurrentUser
 } from '../controllers/userController.js';
 
 const router = express.Router();
@@ -24,5 +25,6 @@ router.get('/all', protect, getUsers);
 router.patch('/:id/block', protect, blockUser);
 router.patch('/:id/unblock', protect, unblockUser);
 router.post('/logout', protect, logout);
+router.get('/me', protect, getCurrentUser);
 
 export default router;

@@ -54,60 +54,6 @@ const FormSubmission = () => {
     }
   };
 
-  const renderQuestion = (question) => {
-    switch (question.type) {
-      case 'text':
-        return (
-          <input
-            type="text"
-            value={answers[question._id] || ''}
-            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-            required={question.isRequired}
-            className="form-control"
-          />
-        );
-      
-      case 'number':
-        return (
-          <input
-            type="number"
-            value={answers[question._id] || ''}
-            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-            required={question.isRequired}
-            className="form-control"
-          />
-        );
-      
-      case 'boolean':
-        return (
-          <select
-            value={answers[question._id] || ''}
-            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-            required={question.isRequired}
-            className="form-control"
-          >
-            <option value="">Select...</option>
-            <option value="true">Yes</option>
-            <option value="false">No</option>
-          </select>
-        );
-      
-      case 'date':
-        return (
-          <input
-            type="date"
-            value={answers[question._id] || ''}
-            onChange={(e) => handleAnswerChange(question._id, e.target.value)}
-            required={question.isRequired}
-            className="form-control"
-          />
-        );
-      
-      default:
-        return null;
-    }
-  };
-
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -121,30 +67,54 @@ const FormSubmission = () => {
   }
 
   return (
-    <div className="form-submission">
-      <h2>{template.title}</h2>
-      <p className="description">{template.description}</p>
-      
-      <form onSubmit={handleSubmit}>
-        {template.questions.map((question, index) => (
-          <div key={question._id} className="question-container">
-            <label>
-              {question.text}
-              {question.isRequired && <span className="required">*</span>}
-            </label>
-            {renderQuestion(question)}
-          </div>
-        ))}
+    <div className="min-h-screen bg-cyber-black text-white p-8">
+      <div className="max-w-3xl mx-auto bg-cyber-gray rounded-xl p-8 shadow-lg">
+        <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-cyber-pink to-cyber-purple bg-clip-text text-transparent">
+          {template.title}
+        </h2>
+        <p className="text-gray-300 mb-8">{template.description}</p>
         
-        <div className="form-actions">
-          <button type="submit" disabled={loading}>
-            {loading ? 'Submitting...' : 'Submit'}
-          </button>
-          <button type="button" onClick={() => navigate(-1)}>
-            Cancel
-          </button>
-        </div>
-      </form>
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {template.questions.map((question) => (
+            <div key={question._id} className="question-container">
+              <label className="block mb-2 text-lg font-medium">
+                {question.text}
+                {question.isRequired && (
+                  <span className="text-cyber-pink ml-1">*</span>
+                )}
+              </label>
+              <input
+                type="text"
+                value={answers[question._id] || ''}
+                onChange={(e) => handleAnswerChange(question._id, e.target.value)}
+                required={question.isRequired}
+                className="w-full bg-cyber-blue border border-cyber-purple rounded-lg p-3 
+                         focus:outline-none focus:ring-2 focus:ring-cyber-pink 
+                         focus:border-transparent transition-all duration-300"
+              />
+            </div>
+          ))}
+          
+          <div className="flex gap-4 mt-8">
+            <button
+              type="submit"
+              disabled={loading}
+              className="bg-cyber-purple hover:bg-opacity-80 px-6 py-3 rounded-lg 
+                       transition-all duration-300 shadow-neon-hover disabled:opacity-50"
+            >
+              {loading ? 'Submitting...' : 'Submit'}
+            </button>
+            <button
+              type="button"
+              onClick={() => navigate(-1)}
+              className="bg-cyber-gray hover:bg-cyber-blue px-6 py-3 rounded-lg 
+                       transition-all duration-300 border border-cyber-pink"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

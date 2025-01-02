@@ -8,9 +8,9 @@ import {
   deleteTemplate,
   getTemplateSubmissions,
   submitTemplateForm,
-  getTemplateAggregation, // Add this
+  getTemplateAggregation,
   getPopularTemplates
-} from '../controllers/templateController.js';
+} from '../controllers/template/index.js';
 
 const router = express.Router();
 

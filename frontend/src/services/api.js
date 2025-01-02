@@ -25,11 +25,17 @@ api.interceptors.request.use(
   }
 );
 
+const deleteTemplate = async (templateId) => {
+  const response = await axios.delete(`/api/templates/${templateId}`);
+  return response;
+};
+
 // Assign the object to a variable
 export default {
   // Auth endpoints
   login: (data) => api.post('/users/login', data),
   register: (data) => api.post('/users/register', data),
+  getCurrentUser: () => api.get('/users/me'),
   
   // Templates endpoints
   getTemplates: () => api.get('/templates'),
@@ -37,7 +43,7 @@ export default {
   getPopularTemplates: () => api.get('/templates/popular'),
   createTemplate: (data) => api.post('/templates', data),
   updateTemplate: (id, data) => api.put(`/templates/${id}`, data),
-  deleteTemplate: (id) => api.delete(`/templates/${id}`),
+  deleteTemplate,
   
   // Form submissions endpoints
   submitTemplateForm: (templateId, data) => api.post(`/templates/${templateId}/submit`, data),
