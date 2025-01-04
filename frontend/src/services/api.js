@@ -26,8 +26,15 @@ api.interceptors.request.use(
 );
 
 const deleteTemplate = async (templateId) => {
-  const response = await axios.delete(`/api/templates/${templateId}`);
-  return response;
+  const token = localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
+  
+  return axios.delete(`${baseURL}/templates/${templateId}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'X-User-Role': userRole // Add role to headers
+    }
+  });
 };
 
 // Assign the object to a variable
