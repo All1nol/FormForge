@@ -20,7 +20,12 @@ const MainPage = () => {
           api.getPopularTemplates()
         ]);
         
-        setTemplates(templatesRes.data);
+        // Sort templates by creation date (newest first)
+        const sortedTemplates = templatesRes.data.sort((a, b) => 
+          new Date(b.createdAt) - new Date(a.createdAt)
+        );
+        
+        setTemplates(sortedTemplates);
         setPopularTemplates(popularRes.data);
       } catch (error) {
         setError('Failed to fetch templates');
