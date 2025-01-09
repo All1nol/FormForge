@@ -46,7 +46,7 @@ const UserPage = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div className="error-message">{error}</div>;
   
-  const handleDeleteTemplate = async (id) => {
+  const handleDeleteTemplate = async (id) => {  //duplication doesn;t work anyway
     if (window.confirm('Are you sure you want to delete this template?')) {
       try {
         await api.deleteTemplate(id);
@@ -83,7 +83,6 @@ const UserPage = () => {
       setTemplateToDelete(null);
     } catch (error) {
       console.error('Failed to delete template:', error);
-      // You might want to show an error message here
     } finally {
       setDeleteLoading(false);
     }

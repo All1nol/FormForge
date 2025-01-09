@@ -21,7 +21,7 @@ const MainPage = () => {
         ]);
         
         // Sort templates by creation date (newest first)
-        const sortedTemplates = templatesRes.data.sort((a, b) => 
+        const sortedTemplates = templatesRes.data.sort((a, b) =>  //axios
           new Date(b.createdAt) - new Date(a.createdAt)
         );
         

@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
-
+  //too much fucntions in templatForm
 const TemplateForm = () => {
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // user should be navigated where? mainPage|| response|| template 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [questions, setQuestions] = useState([{ text: '', type: 'text', isRequired: false }]);
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false); // loading shouldn't be here
 
-  const handleAddQuestion = () => {
+  const handleAddQuestion = () => { // add new question to the form
     setQuestions([...questions, { text: '', type: 'text', isRequired: false }]);
   };
 
-  const handleQuestionChange = (index, field, value) => {
+  const handleQuestionChange = (index, field, value) => {//handle changes in question
     const newQuestions = [...questions];
     newQuestions[index][field] = value;
     setQuestions(newQuestions);
   };
 
-  const handleRemoveQuestion = (index) => {
+  const handleRemoveQuestion = (index) => { //remove
     if (questions.length > 1) {
       setQuestions(questions.filter((_, i) => i !== index));
     }
   };
 
-  const validateForm = () => {
+  const validateForm = () => {  // validation error handle could be somewhere else not here
     if (!title.trim()) {
       setError('Title is required');
       return false;

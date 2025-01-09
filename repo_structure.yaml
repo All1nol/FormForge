@@ -1,0 +1,277 @@
+  - path: /backend
+    type: directory
+    contents:
+    - path: /backend/app.js
+      type: file
+    - path: /backend/config
+      type: directory
+      contents:
+      - path: /backend/config/db.js
+        type: file
+    - path: /backend/controllers
+      type: directory
+      contents:
+      - path: /backend/controllers/formController.js
+        type: file
+      - path: /backend/controllers/responseController.js
+        type: file
+      - path: /backend/controllers/template
+        type: directory
+        contents:
+        - path: /backend/controllers/template/aggregation.js
+          type: file
+        - path: /backend/controllers/template/createTemplate.js
+          type: file
+        - path: /backend/controllers/template/deleteTemplate.js
+          type: file
+        - path: /backend/controllers/template/getTemplateById.js
+          type: file
+        - path: /backend/controllers/template/getTemplates.js
+          type: file
+        - path: /backend/controllers/template/index.js
+          type: file
+        - path: /backend/controllers/template/submissions.js
+          type: file
+        - path: /backend/controllers/template/updateTemplate.js
+          type: file
+      - path: /backend/controllers/templateController.js
+        type: file
+      - path: /backend/controllers/userController.js
+        type: file
+    - path: /backend/middleware
+      type: directory
+      contents:
+      - path: /backend/middleware/authMiddleware.js
+        type: file
+      - path: /backend/middleware/errorMiddleware.js
+        type: file
+    - path: /backend/models
+      type: directory
+      contents:
+      - path: /backend/models/Form.js
+        type: file
+      - path: /backend/models/Response.js
+        type: file
+      - path: /backend/models/Template.js
+        type: file
+      - path: /backend/models/User.js
+        type: file
+    - path: /backend/package-lock.json
+      type: file
+    - path: /backend/package.json
+      type: file
+    - path: /backend/routes
+      type: directory
+      contents:
+      - path: /backend/routes/formRoutes.js
+        type: file
+      - path: /backend/routes/responseRoutes.js
+        type: file
+      - path: /backend/routes/templatesRoutes.js
+        type: file
+      - path: /backend/routes/userRoutes.js
+        type: file
+    - path: /backend/server.js
+      type: file
+    - path: /backend/utils
+      type: directory
+      contents:
+      - path: /backend/utils/aggregation.js
+        type: file
+      - path: /backend/utils/aggregationHelpers.js
+        type: file
+      - path: /backend/utils/errorHandler.js
+        type: file
+      - path: /backend/utils/statsCalculator.js
+        type: file
+      - path: /backend/utils/validation.js
+        type: file
+  - path: /frontend
+    type: directory
+    contents:
+    - path: /frontend/package-lock.json
+      type: file
+    - path: /frontend/package.json
+      type: file
+    - path: /frontend/postcss.config.js
+      type: file
+    - path: /frontend/public
+      type: directory
+      contents:
+      - path: /frontend/public/404.html
+        type: file
+      - path: /frontend/public/favicon.ico
+        type: file
+      - path: /frontend/public/index.html
+        type: file
+      - path: /frontend/public/logo192.png
+        type: file
+      - path: /frontend/public/logo512.png
+        type: file
+      - path: /frontend/public/manifest.json
+        type: file
+      - path: /frontend/public/robots.txt
+        type: file
+      - path: /frontend/public/serve.json
+        type: file
+      - path: /frontend/public/_redirects
+        type: file
+    - path: /frontend/README.md
+      type: file
+    - path: /frontend/render.yaml
+      type: file
+    - path: /frontend/src
+      type: directory
+      contents:
+      - path: /frontend/src/App.css
+        type: file
+      - path: /frontend/src/App.js
+        type: file
+      - path: /frontend/src/App.test.js
+        type: file
+      - path: /frontend/src/components
+        type: directory
+        contents:
+        - path: /frontend/src/components/common
+          type: directory
+          contents:
+          - path: /frontend/src/components/common/ErrorMessage.css
+            type: file
+          - path: /frontend/src/components/common/ErrorMessage.js
+            type: file
+          - path: /frontend/src/components/common/LoadingSpinner.css
+            type: file
+          - path: /frontend/src/components/common/LoadingSpinner.js
+            type: file
+        - path: /frontend/src/components/ErrorMessage.js
+          type: file
+        - path: /frontend/src/components/form
+          type: directory
+          contents:
+          - path: /frontend/src/components/form/QuestionInput.js
+            type: file
+        - path: /frontend/src/components/FormSubmission.js
+          type: file
+        - path: /frontend/src/components/LoadingSpinner.js
+          type: file
+        - path: /frontend/src/components/loginForm.js
+          type: file
+        - path: /frontend/src/components/Navbar.js
+          type: file
+        - path: /frontend/src/components/Navigation.js
+          type: file
+        - path: /frontend/src/components/ProtectedRoute.js
+          type: file
+        - path: /frontend/src/components/responseForm.js
+          type: file
+        - path: /frontend/src/components/SearchBar.js
+          type: file
+        - path: /frontend/src/components/shared
+          type: directory
+          contents:
+          - path: /frontend/src/components/shared/FormField.js
+            type: file
+        - path: /frontend/src/components/template
+          type: directory
+          contents:
+          - path: /frontend/src/components/template/DeleteTemplateModal.js
+            type: file
+          - path: /frontend/src/components/template/form
+            type: directory
+            contents:
+            - path: /frontend/src/components/template/form/EditTemplateForm.js
+              type: file
+            - path: /frontend/src/components/template/form/TemplateBasicInfo.js
+              type: file
+          - path: /frontend/src/components/template/GeneralSettings.js
+            type: file
+          - path: /frontend/src/components/template/QuestionEditor.js
+            type: file
+          - path: /frontend/src/components/template/QuestionItem.js
+            type: file
+          - path: /frontend/src/components/template/QuestionList.js
+            type: file
+          - path: /frontend/src/components/template/QuestionViewer.js
+            type: file
+          - path: /frontend/src/components/template/ResultsAggregation.js
+            type: file
+          - path: /frontend/src/components/template/ResultsTable.js
+            type: file
+          - path: /frontend/src/components/template/SubmissionsList.js
+            type: file
+          - path: /frontend/src/components/template/TemplateHeader.js
+            type: file
+          - path: /frontend/src/components/template/TemplateSettings.js
+            type: file
+          - path: /frontend/src/components/template/TemplateStats.js
+            type: file
+          - path: /frontend/src/components/template/TemplateTabs.js
+            type: file
+        - path: /frontend/src/components/TemplateCard.js
+          type: file
+        - path: /frontend/src/components/TemplateForm.js
+          type: file
+        - path: /frontend/src/components/TemplateList.js
+          type: file
+      - path: /frontend/src/context
+        type: directory
+        contents:
+        - path: /frontend/src/context/UserContext.js
+          type: file
+      - path: /frontend/src/contexts
+        type: directory
+        contents:
+        - path: /frontend/src/contexts/AuthContext.js
+          type: file
+      - path: /frontend/src/hooks
+        type: directory
+        contents:
+        - path: /frontend/src/hooks/useForm.js
+          type: file
+        - path: /frontend/src/hooks/useFormValidation.js
+          type: file
+        - path: /frontend/src/hooks/useTemplate.js
+          type: file
+      - path: /frontend/src/index.css
+        type: file
+      - path: /frontend/src/index.js
+        type: file
+      - path: /frontend/src/logo.svg
+        type: file
+      - path: /frontend/src/pages
+        type: directory
+        contents:
+        - path: /frontend/src/pages/AdminPage.js
+          type: file
+        - path: /frontend/src/pages/FormView.js
+          type: file
+        - path: /frontend/src/pages/LoginRegister.js
+          type: file
+        - path: /frontend/src/pages/MainPage.js
+          type: file
+        - path: /frontend/src/pages/SearchResults.js
+          type: file
+        - path: /frontend/src/pages/TemplateDetails.js
+          type: file
+        - path: /frontend/src/pages/UserPage.js
+          type: file
+      - path: /frontend/src/services
+        type: directory
+        contents:
+        - path: /frontend/src/services/api.js
+          type: file
+        - path: /frontend/src/services/templateService.js
+          type: file
+      - path: /frontend/src/setupTests.js
+        type: file
+      - path: /frontend/src/tailwind.config.js
+        type: file
+      - path: /frontend/src/utils
+        type: directory
+        contents:
+        - path: /frontend/src/utils/authUtils.js
+          type: file
+        - path: /frontend/src/utils/errorHandler.js
+          type: file
+    - path: /frontend/tailwind.config.js
+      type: file

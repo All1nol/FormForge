@@ -6,18 +6,19 @@ const Navbar = () => {
   const [userRole, setUserRole] = useState(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token'); //storage Api &&its method
     const role = localStorage.getItem('userRole');
     setIsAuthenticated(!!token);
     setUserRole(role);
   }, []);
 
+  //logut shouldn't be done here i will change it later
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userRole');
     setIsAuthenticated(false);
     setUserRole(null);
-    window.location.href = '/';
+    window.location.href = '/';//home page
   };
 
   return (

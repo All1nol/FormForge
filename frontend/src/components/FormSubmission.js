@@ -8,13 +8,13 @@ const FormSubmission = () => {
   const [template, setTemplate] = useState(null);
   const [answers, setAnswers] = useState({});
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); // again this can be done in somewhere else 
 
   useEffect(() => {
     fetchTemplate();
   }, [id]);
 
-  const fetchTemplate = async () => {
+  const fetchTemplate = async () => { // shouldn't be here, we can put this function seperate 
     try {
       setLoading(true);
       const response = await api.getTemplateById(id);
@@ -25,7 +25,7 @@ const FormSubmission = () => {
       response.data.questions.forEach(question => {
         initialAnswers[question._id] = '';
       });
-      setAnswers(initialAnswers);
+      setAnswers(initialAnswers); // initialize the answers state
       
     } catch (error) {
       setError(error.response?.data?.message || 'Failed to fetch template');

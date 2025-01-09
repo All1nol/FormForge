@@ -33,21 +33,19 @@ const TemplateDetails = () => {
     setTemplate
   } = useTemplate(id);
 
-  // Check if user is creator or admin
+
   const isCreatorOrAdmin = template && (
     user.role === 'admin' || 
     template.user?._id === user._id
   );
 
   useEffect(() => {
-    // Only redirect if not creator or admin
     if (template && !isCreatorOrAdmin) {
       navigate(`/template/${id}/submit`);
     }
   }, [template, isCreatorOrAdmin, id, navigate]);
 
   const getTabs = () => {
-    // Show all administrative tabs for creator or admin
     if (isCreatorOrAdmin) {
       return [
         { id: 'general', label: 'General' },
@@ -57,7 +55,6 @@ const TemplateDetails = () => {
         { id: 'settings', label: 'Settings' }
       ];
     }
-    // Show limited tabs for other users
     return [
       { id: 'general', label: 'General' },
       { id: 'questions', label: 'Questions' }

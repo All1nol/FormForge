@@ -10,7 +10,7 @@ const generateToken = (id) => {
 };
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password } = req.body; //extract 
   if (!name || !email || !password) {
     res.status(400).json({ message: 'Please provide all required fields' });
     return;
@@ -22,9 +22,9 @@ export const registerUser = asyncHandler(async (req, res) => {
     return;
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
-  try {
-    const user = await User.create({
+  const hashedPassword = await bcrypt.hash(password, 10);//hash password
+  try { //then create new user after 
+    const user = await User.create({ 
       name,
       email,
       password: hashedPassword,
@@ -66,6 +66,9 @@ export const authUser = asyncHandler(async (req, res) => {
   }
 });
 
+// @desc    Get user templates
+// @route   GET /api/users/templates
+// @access  Private
 export const getUserTemplates = async (req, res) => {
   try {
     const templates = await Template.find({ user: req.user._id })
@@ -77,6 +80,9 @@ export const getUserTemplates = async (req, res) => {
   }
 };
 
+// @desc    Get user forms
+// @route   GET /api/users/forms
+// @access  Private
 export const getUserForms = async (req, res) => {
   try {
     const forms = await Form.find({ user: req.user._id })
@@ -88,7 +94,9 @@ export const getUserForms = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// @desc    Get all users
+// @route   GET /api/users/all
+// @access  Private (Admin only)
 export const getUsers = async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -100,7 +108,9 @@ export const getUsers = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// @desc    Block a user
+// @route   PATCH /api/users/:id/block
+// @access  Private (Admin only)
 export const blockUser = async (req, res) => {
   try {
     const userToBlock = await User.findById(req.params.id);
@@ -122,7 +132,9 @@ export const blockUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// @desc    Unblock a user
+// @route   PATCH /api/users/:id/unblock
+// @access  Private (Admin only)
 export const unblockUser = async (req, res) => {
   try {
     if (req.user.role !== 'admin') {
@@ -141,7 +153,10 @@ export const unblockUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// @desc    Logout a user
+// @route   POST /api/users/logout
+// @access  Private
+//logout could be improved later on
 export const logout = async (req, res) => {
   try {
     res.json({ message: 'Logged out successfully' });
@@ -149,7 +164,9 @@ export const logout = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
+// @desc    Get current user
+// @route   GET /api/users/me
+// @access  Private
 export const getCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('-password');

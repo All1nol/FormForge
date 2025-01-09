@@ -31,7 +31,6 @@ router.route('/:id/submit')
 router.route('/:id/submissions')
   .get(protect, getTemplateSubmissions);
 
-// Add this new route
 router.route('/:id/aggregation')
   .get(protect, getTemplateAggregation);
 
