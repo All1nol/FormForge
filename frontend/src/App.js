@@ -12,6 +12,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import FormSubmission from './components/FormSubmission';
 import FormView from './pages/FormView';
 import { AuthProvider } from './contexts/AuthContext';
+import CreateTicket from './components/CreateTicket';
+import TicketDashboard from './components/TicketDashboard';
 
 const App = () => {
   return (
@@ -59,6 +61,8 @@ const App = () => {
                   <FormView />
                 </ProtectedRoute>
               } />
+              <Route path="/create-ticket" element={<CreateTicket />} />
+              <Route path="/tickets" element={<TicketDashboard />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </main>

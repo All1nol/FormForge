@@ -75,4 +75,7 @@ export default {
   getUsers: () => api.get('/users/all'),
   blockUser: (userId) => api.patch(`/users/${userId}/block`),
   unblockUser: (userId) => api.patch(`/users/${userId}/unblock`),
+
+  // Ticket endpoints
+  createTicket: (data) => api.post('/tickets/create', data),
 };
