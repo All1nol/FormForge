@@ -5,15 +5,23 @@
   "dependencies": {
     "axios": "^1.7.9",
     "clsx": "^2.1.1",
-    "cra-template": "1.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.54.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^7.0.2",
-    "react-scan": "^0.0.54",
     "react-scripts": "5.0.1",
     "yup": "^1.5.0"
+  },
+  "devDependencies": {
+    "@pmmmwh/react-refresh-webpack-plugin": "^0.5.10",
+    "autoprefixer": "^10.4.20",
+    "html-webpack-plugin": "^5.5.0",
+    "postcss": "^8.4.49",
+    "source-map-loader": "^4.0.1",
+    "tailwindcss": "^3.4.17",
+    "webpack": "^5.88.0",
+    "webpack-dev-server": "^4.15.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -38,10 +46,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "autoprefixer": "^10.4.20",
-    "postcss": "^8.4.49",
-    "tailwindcss": "^3.4.17"
   }
 }
