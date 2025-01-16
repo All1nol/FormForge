@@ -88,7 +88,6 @@ const Navbar = () => {
                 </Link>
               </>
             )}
-            <Link to="/create-ticket">Create Support Ticket</Link>
           </div>
         </div>
       </div>

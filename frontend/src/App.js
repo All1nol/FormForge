@@ -14,6 +14,7 @@ import FormView from './pages/FormView';
 import { AuthProvider } from './contexts/AuthContext';
 import CreateTicket from './components/CreateTicket';
 import TicketDashboard from './components/TicketDashboard';
+import HelpButton from './components/HelpButton';
 
 const App = () => {
   return (
@@ -65,6 +66,7 @@ const App = () => {
               <Route path="/tickets" element={<TicketDashboard />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
+            <HelpButton />
           </main>
         </div>
       </Router>
