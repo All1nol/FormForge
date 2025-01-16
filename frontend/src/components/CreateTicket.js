@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import api from '../services/api';
 
 const CreateTicket = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [summary, setSummary] = useState('');
   const [priority, setPriority] = useState('Low');
-  const [templateTitle, setTemplateTitle] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const templateInfo = location.state?.template || {
+    title: location.pathname.includes('template') ? 
+      document.title.split(' - ')[0] : 
+      'N/A'
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +23,8 @@ const CreateTicket = () => {
       const response = await api.createTicket({
         summary,
         priority,
-        templateTitle,
+        templateTitle: templateInfo.title, 
+        link: window.location.href 
       });
       setMessage(`Ticket created: ${response.data.key}`);
       setTimeout(() => {

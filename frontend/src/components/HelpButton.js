@@ -1,12 +1,28 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 
 const HelpButton = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleClick = () => {
+    const isTemplatePage = location.pathname.includes('/template/');
+    const templateId = isTemplatePage ? location.pathname.split('/')[2] : null;
+    const templateTitle = document.title.split(' - ')[0];
+
+    navigate('/create-ticket', {
+      state: {
+        template: templateId ? {
+          id: templateId,
+          title: templateTitle
+        } : null
+      }
+    });
+  };
 
   return (
     <button
-      onClick={() => navigate('/create-ticket')}
+      onClick={handleClick}
       className="fixed bottom-8 right-8 bg-cyber-purple hover:bg-cyber-pink 
                  rounded-full p-4 shadow-neon transition-all duration-300
                  hover:scale-110 z-50"

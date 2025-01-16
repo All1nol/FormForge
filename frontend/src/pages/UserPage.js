@@ -164,6 +164,13 @@ const UserPage = () => {
         >
           My Filled Forms ({forms.length})
         </button>
+        <button 
+          className="px-6 py-3 rounded-lg transition-all duration-300 
+                   bg-cyber-gray hover:bg-cyber-blue"
+          onClick={() => navigate('/tickets')}
+        >
+          My Tickets
+        </button>
       </div>
 
       {activeTab === 'templates' && (

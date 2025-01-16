@@ -78,4 +78,6 @@ export default {
 
   // Ticket endpoints
   createTicket: (data) => api.post('/tickets/create', data),
+  getTickets: (page = 1, limit = 10) => 
+    api.get(`/tickets?page=${page}&limit=${limit}`),
 };

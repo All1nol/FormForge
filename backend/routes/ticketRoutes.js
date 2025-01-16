@@ -44,4 +44,29 @@ router.post('/create', protect, async (req, res) => {
   }
 });
 
+// Get tickets with pagination
+router.get('/', protect, async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
+
+    const total = await Ticket.countDocuments({ user: req.user._id });
+    const tickets = await Ticket.find({ user: req.user._id })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit);
+
+    res.json({
+      tickets,
+      total,
+      page,
+      pages: Math.ceil(total / limit)
+    });
+  } catch (error) {
+    console.error('Error fetching tickets:', error);
+    res.status(500).json({ message: 'Error fetching tickets' });
+  }
+});
+
 export default router;
