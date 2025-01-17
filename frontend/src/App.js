@@ -51,6 +51,7 @@ const App = () => {
                 </ProtectedRoute>
               } />
               <Route path="/login" element={<LoginRegister />} />
+              <Route path="/register" element={<LoginRegister initialIsRegister={true} />} />
               <Route path="/search" element={<SearchResults />} />
               <Route path="/template/:id/submit" element={
                 <ProtectedRoute>

@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 
-const LoginRegister = () => {
-  const [isLogin, setIsLogin] = useState(true);
+const LoginRegister = ({ initialIsRegister }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const [isLogin, setIsLogin] = useState(!initialIsRegister);
+  
+  // Reset isLogin when path changes
+  useEffect(() => {
+    const isRegisterPath = location.pathname === '/register';
+    setIsLogin(!isRegisterPath);
+  }, [location.pathname]);
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
@@ -31,6 +41,12 @@ const LoginRegister = () => {
     } finally {
       setLoading(false);
     }
+  };
+
+  // Toggle function now updates URL
+  const toggleForm = () => {
+    const newPath = isLogin ? '/register' : '/login';
+    navigate(newPath);
   };
 
   return (
@@ -99,7 +115,7 @@ const LoginRegister = () => {
         </form>
 
         <button
-          onClick={() => setIsLogin(!isLogin)}
+          onClick={toggleForm}
           className="w-full mt-4 text-gray-400 hover:text-cyber-pink transition-colors"
         >
           {isLogin ? 'Need an account? Register' : 'Already have an account? Login'}
